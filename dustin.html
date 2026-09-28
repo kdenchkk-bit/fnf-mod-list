@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FNF: Friday Night Dustin</title>
+    <!-- Подключение иконок для интерфейса и плеера -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <style>
+        :root {
+            --bg-dark: #09090b;
+            --panel-bg: #121216;
+            --border-glow: #22222a;
+            --neon-purple: #9333ea;
+            --neon-red: #dc2626;
+            --text-light: #f3f4f6;
+            --text-gray: #a1a1aa;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        /* Неоновый Хедер */
+        .hero {
+            background: linear-gradient(180px, rgba(147, 51, 234, 0.15) 0%, rgba(9, 9, 11, 0) 100%);
+            padding: 80px 0 40px 0;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-purple), 0 0 30px rgba(147, 51, 234, 0.4);
+            margin-bottom: 15px;
+        }
+        .hero p { color: var(--text-gray); font-size: 1.2rem; }
+
+        /* Макет сетки */
+        .layout { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-top: 40px; }
+        @media (max-width: 992px) { .layout { grid-template-columns: 1fr; } }
+
+        /* Стильные кибер-карточки */
+        .cyber-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        .cyber-card:hover {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.15);
+        }
+        .cyber-card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            border-bottom: 1px solid var(--border-glow);
+            padding-bottom: 10px;
+        }
+
+        /* Интерактивные Вкладки (Табы) */
+        .tab-buttons { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn {
+            background: #181822; border: 1px solid var(--border-glow); color: var(--text-gray);
+            padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        .tab-btn.active { background: var(--neon-purple); color: white; border-color: var(--neon-purple); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Галерея картинок и гифок */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+        .gallery-item {
+            border-radius: 10px; overflow: hidden; border: 1px solid var(--border-glow);
+            position: relative; cursor: pointer; aspect-ratio: 16/9; background: #181822;
+        }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .gallery-item:hover img { transform: scale(1.05); }
+        .gallery-item::after {
+            content: 'Увеличить'; position: absolute; inset: 0; background: rgba(0,0,0,0.7);
+            display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; font-weight: bold;
+        }
+        .gallery-item:hover::after { opacity: 1; }
+
+        /* Музыкальный Плеер */
+        .track-row {
+            display: flex; align-items: center; justify-content: space-between;
+            background: #171721; padding: 15px 20px; border-radius: 10px; margin-bottom: 12px;
+            border-left: 4px solid var(--neon-purple); transition: 0.2s;
+        }
+        .track-row:hover { background: #1e1e2b; }
+        .track-row.bonus { border-left-color: var(--neon-red); }
+        .play-btn {
+            background: var(--neon-purple); border: none; width: 42px; height: 42px;
+            border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        }
+        .play-btn:hover { transform: scale(1.1); filter: brightness(1.2); }
+
+        /* Кнопка скачивания */
+        .download-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: linear-gradient(135deg, var(--neon-purple), #7e22ce);
+            color: white; text-decoration: none; padding: 15px; border-radius: 10px;
+            font-weight: bold; font-size: 1.1rem; text-transform: uppercase; transition: 0.2s;
+        }
+        .download-btn:hover { box-shadow: 0 0 15px var(--neon-purple); filter: brightness(1.1); }
+    </style>
+</head>
+<body>
+    <!-- НАЧАЛО: Шапка сайта -->
+    <header class="hero">
+        <div class="container">
+            <a href="index.html" style="color: var(--neon-purple); text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 20px;">
+                <i class="fas fa-arrow-left"></i> Вернуться на главную
+            </a>
+            <h1>Friday Night Dustin</h1>
+            <p>Официальная страница разработки мода на Codename Engine</p>
+        </div>
+    </header>
+    <!-- КОНЕЦ: Шапка сайта -->
+    <div class="container">
+        <div class="layout">
+            
+            <!-- ЛЕВАЯ КОЛОНКА -->
+            <main>
+                <div class="cyber-card">
+                    <h2><i class="fas fa-bars-staggered" style="color: var(--neon-purple);"></i> Описание проекта</h2>
+                    
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" onclick="openTab(event, 'lore')">Лор / Сюжет</button>
+                        <button class="tab-btn" onclick="openTab(event, 'team')">Разработчики</button>
+                    </div>
+                    
+                    <div id="lore" class="tab-content active">
+                        <p><strong>Friday Night Dustin</strong> — это мрачная и безумная история, основанная на популярной альтернативной вселенной Dusttale. Санс, сошедший с ума от бесконечных перезапусков и геноцида, решает пойти на радикальные меры для победы над человеком.</p>
+                        <p style="margin-top: 10px;">Проект разрабатывается на технологичном движке <strong>Codename Engine</strong>, что гарантирует отличную оптимизацию, кастомные шейдеры и плавные анимации.</p>
+                    </div>
+
+                    <div id="team" class="tab-content">
+                        <p style="margin-bottom: 8px;"><i class="fas fa-crown" style="color: #fbbf24;"></i> <strong>ChezzarCat</strong> — Основной создатель, главный разработчик кода и сборки.</p>
+                        <p><i class="fas fa-clapperboard" style="color: #60a5fa;"></i> <strong>Mar Mar</strong> — Режиссер проекта, отвечающий за концепты, видение и развитие мода.</p>
+                    </div>
+                </div>
+                <div class="cyber-card">
+                    <h2><i class="fas fa-photo-film" style="color: var(--neon-purple);"></i> Медиа и Спрайты (Гифки / Картинки)</h2>
+                    <p style="color: var(--text-gray); margin-bottom: 15px;">Сюда можно загружать тизеры, гифки с анимациями Дастина или скриншоты игрового процесса:</p>
+                    
+                    <div class="gallery-grid">
+                        <!-- Карточка 1 (Пример гифки) -->
+                        <div class="gallery-item">
+                            <!-- Замени src на путь к своей гифке, например: "images/dustin_dance.gif" -->
+                            <img src="https://giphy.com" alt="Dustin Anim">
+                        </div>
+                        
+                        <!-- Карточка 2 (Пример скриншота) -->
+                        <div class="gallery-item">
+                            <img src="https://placehold.co" alt="Screenshot 1">
+                        </div>
+
+                        <!-- Карточка 3 (Пример арта) -->
+                        <div class="gallery-item">
+                            <img src="https://placehold.co" alt="Screenshot 2">
+                        </div>
+                    </div>
+                </div>
+                <div class="cyber-card">
+                    <h2><i class="fas fa-wave-square" style="color: var(--neon-red);"></i> Музыкальный Треклист</h2>
+                    
+                    <!-- Трек 1 -->
+                    <div class="track-row">
+                        <div>
+                            <strong>Perseverance</strong>
+                            <div style="font-size: 0.85rem; color: var(--text-gray);">BPM: 120 → 200 <span style="color: #6b7280;">(в ранних версиях 60-100)</span></div>
+                        </div>
+                        <button class="play-btn" onclick="togglePlay('perseverance.mp3', this)"><i class="fas fa-play"></i></button>
+                    </div>
+
+                    <!-- Трек 2 -->
+                    <div class="track-row">
+                        <div>
+                            <strong>Kinemorto</strong>
+                            <div style="font-size: 0.85rem; color: var(--text-gray);">BPM: 140</div>
+                        </div>
+                        <button class="play-btn" onclick="togglePlay('kinemorto.mp3', this)"><i class="fas fa-play"></i></button>
+                    </div>
+
+                    <!-- Трек 3 -->
+                    <div class="track-row">
+                        <div>
+                            <strong>Cornered</strong>
+                            <div style="font-size: 0.85rem; color: var(--text-gray);">BPM: 120 → 163</div>
+                        </div>
+                        <button class="play-btn" onclick="togglePlay('cornered.mp3', this)"><i class="fas fa-play"></i></button>
+                    </div>
+
+                    <!-- Трек 4 -->
+                    <div class="track-row">
+                        <div>
+                            <strong>HEATWAVE</strong>
+                            <div style="font-size: 0.85rem; color: var(--text-gray);">BPM: 130 → 140 → 130</div>
+                        </div>
+                        <button class="play-btn" onclick="togglePlay('heatwave.mp3', this)"><i class="fas fa-play"></i></button>
+                    </div>
+
+                    <!-- Трек 5 -->
+                    <div class="track-row">
+                        <div>
+                            <strong>Avulsion</strong>
+                            <div style="font-size: 0.85rem; color: var(--text-gray);">BPM: 165 → 180</div>
+                        </div>
+                        <button class="play-btn" onclick="togglePlay('avulsion.mp3', this)"><i class="fas fa-play"></i></button>
+                    </div>
+
+                    <!-- Трек 6 -->
+                    <div class="track-row">
+                        <div>
+                            <strong>YOU ARE</strong>
+                            <div style="font-size: 0.85rem; color: var(--text-gray);">BPM: 174 → 220</div>
+                        </div>
+                        <button class="play-btn" onclick="togglePlay('you_are.mp3', this)"><i class="fas fa-play"></i></button>
+                    </div>
+
+                    <!-- Трек 7 (Бонус) -->
+                    <div class="track-row bonus">
+                        <div>
+                            <strong style="color: var(--neon-red);">Haunted (Бонусный / Дополнительный трек)</strong>
+                            <div style="font-size: 0.85rem; color: var(--text-gray);">BPM: 120</div>
+                        </div>
+                        <button class="play-btn" style="background: var(--neon-red);" onclick="togglePlay('haunted.mp3', this)"><i class="fas fa-play"></i></button>
+                    </div>
+                </div>
+            </main>
+            <!-- ПРАВАЯ КОЛОНКА (САЙДБАР) -->
+            <aside>
+                <div class="cyber-card">
+                    <h2><i class="fas fa-gamepad"></i> Скачать билд</h2>
+                    <p style="margin-bottom: 15px; font-size: 0.9rem; color: var(--text-gray);">Сборка мода запускается и тестируется на Codename Engine.</p>
+                    <a href="#" class="download-btn"><i class="fas fa-download"></i> Скачать Мод</a>
+                </div>
+
+                <div class="cyber-card" style="font-size: 0.9rem;">
+                    <h2><i class="fas fa-circle-info"></i> Спецификации</h2>
+                    <p><strong>Движок:</strong> Codename Engine</p>
+                    <p><strong>Категория:</strong> Полная Неделя + Бонус</p>
+                    <p><strong>Кол-во треков:</strong> 7 песен</p>
+                </div>
+            </aside>
+
+        </div>
+    </div>
+
+    <!-- ЛОГИКА ДЛЯ ТАБОВ И ПЛЕЕРА -->
+    <script>
+        // Переключение табов
+        function openTab(evt, tabName) {
+            let tabcontent = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; }
+            
+            let tabbuttons = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tabbuttons.length; i++) { tabbuttons[i].className = tabbuttons[i].className.replace(" active", ""); }
+            
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Логика плеера
+        let currentAudio = null;
+        let currentBtn = null;
+
+        function togglePlay(audioSrc, btn) {
+            if (currentAudio && currentAudio.src.includes(audioSrc)) {
+                if (currentAudio.paused) {
+                    currentAudio.play();
+                    btn.innerHTML = '<i class="fas fa-pause"></i>';
+                } else {
+                    currentAudio.pause();
+                    btn.innerHTML = '<i class="fas fa-play"></i>';
+                }
+            } else {
+                if (currentAudio) {
+                    currentAudio.pause();
+                    currentBtn.innerHTML = '<i class="fas fa-play"></i>';
+                }
+                currentAudio = new Audio(audioSrc);
+                currentAudio.play().catch(e => alert("Чтобы трек воспроизводился, загрузи файл с именем '" + audioSrc + "' в репозиторий!"));
+                currentBtn = btn;
+                btn.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+        }
+    </script>
+</body>
+</html>
