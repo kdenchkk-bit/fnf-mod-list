@@ -4,29 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FNF Mod-Portal | Архив Временных Линий</title>
-    <!-- Подключаем брутальный шрифт для игровой атмосферы -->
-    <link href="https://googleapis.com" rel="stylesheet">
-    
-    <!-- Сюда в следующих частях встанут стили CSS -->
+    <!-- Подключаем брутальные игровые шрифты и иконки -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Comfortaa:wght@700&family=Press+Start+2P&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cloudflare.com">
     <style>
-        /* Основные цвета портала */
+        /* Переносим жёсткую неоновую палитру из dustin.html */
         :root {
-            --bg-main: #0c0813;
-            --bg-card: #140d22;
-            --fnf-cyan: #00bfff;
-            --fnf-pink: #ff007f;
-            --dust-purple: #8a2be2;
-            --text-color: #e5e0ed;
+            --bg-main: #09090b;
+            --bg-card: #121216;
+            --border-glow: #22222a;
+            --neon-purple: #9333ea;
+            --neon-pink: #ff007f;
+            --neon-cyan: #00bfff;
+            --text-light: #f3f4f6;
+            --text-gray: #a1a1aa;
         }
 
-        /* Общие настройки страницы */
         body {
             background-color: var(--bg-main);
-            color: var(--text-color);
+            color: var(--text-light);
             font-family: 'Ubuntu Mono', monospace;
             margin: 0;
             padding: 0;
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
         .container {
@@ -34,45 +37,68 @@
             margin: 0 auto;
             padding: 20px;
         }
-
-        /* Стили шапки сайта */
+        /* Стилизованный неоновый хедер */
         header {
             text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(180deg, #19102b 0%, var(--bg-main) 100%);
-            border-bottom: 2px solid var(--dust-purple);
+            padding: 80px 20px 40px 20px;
+            background: linear-gradient(180deg, rgba(147, 51, 234, 0.15) 0%, rgba(9, 9, 11, 0) 100%);
+            border-bottom: 2px solid var(--neon-purple);
         }
 
         header h1 {
             font-family: 'Press Start 2P', cursive;
             font-size: 2.2rem;
             color: #fff;
-            margin-bottom: 20px;
-            text-shadow: 4px 4px 0px var(--fnf-pink);
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px var(--neon-purple), 4px 4px 0px var(--neon-pink);
         }
 
         header p {
             font-size: 1.2rem;
-            color: #a59cb3;
-            max-width: 700px;
+            color: var(--text-gray);
+            max-width: 750px;
             margin: 0 auto;
-            line-height: 1.5;
+        }
+
+        /* Интерактивный кибер-поиск */
+        .search-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .search-container input {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px 20px;
+            background-color: var(--bg-card);
+            border: 2px solid var(--border-glow);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-family: 'Ubuntu Mono', monospace;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-container input:focus {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 15px rgba(147, 51, 234, 0.4);
         }
     </style>
     <style>
-        /* Сетка для карточек модификаций */
+        /* Сетка карточек */
         .mods-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
-            margin-top: 50px;
+            margin-top: 40px;
         }
 
-        /* Базовый стиль карточки мода */
+        /* Жёсткие кибер-карточки модов */
         .mod-card {
             background-color: var(--bg-card);
-            border: 2px solid #251a3a;
-            border-radius: 12px;
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
@@ -80,17 +106,14 @@
             flex-direction: column;
         }
 
-        /* Крутой интерактив при наведении на мод */
         .mod-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-color: var(--fnf-pink);
-            box-shadow: 0 10px 25px rgba(255, 0, 127, 0.25),
-                        0 0 15px rgba(138, 43, 226, 0.2);
+            transform: translateY(-8px);
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 25px rgba(147, 51, 234, 0.25);
         }
 
-        /* Контентная часть внутри карточки */
         .mod-info {
-            padding: 25px;
+            padding: 30px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
@@ -98,43 +121,52 @@
 
         .mod-info h2 {
             font-family: 'Comfortaa', cursive;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             color: #fff;
-            margin-bottom: 12px;
-            transition: color 0.3s ease;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
         }
 
         .mod-card:hover .mod-info h2 {
-            color: var(--fnf-cyan);
-            text-shadow: 2px 2px 0px rgba(255, 0, 127, 0.5);
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px var(--neon-purple);
         }
 
         .mod-info p {
             font-size: 1rem;
-            color: #b3a7c4;
+            color: var(--text-gray);
             line-height: 1.6;
             margin-bottom: 20px;
         }
-
-        /* Кнопка перехода к базе мода */
+        /* Стилизация нижних кнопок перехода */
         .mod-link {
             display: block;
             text-align: center;
-            background: linear-gradient(90deg, #1d1233 0%, #291a47 100%);
+            background: #171721;
             color: #fff;
             text-decoration: none;
-            padding: 14px;
+            padding: 16px;
             font-weight: bold;
             font-size: 1.1rem;
-            border-top: 1px solid #251a3a;
+            border-top: 1px solid var(--border-glow);
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .mod-card:hover .mod-link {
-            background: linear-gradient(90deg, var(--fnf-pink) 0%, var(--dust-purple) 100%);
-            box-shadow: 0 -4px 10px rgba(255, 0, 127, 0.2);
+            background: linear-gradient(90deg, var(--neon-purple) 0%, #7e22ce 100%);
+            box-shadow: 0 -4px 15px rgba(147, 51, 234, 0.3);
+        }
+
+        .mod-link.disabled {
+            background: #101014;
+            color: #52525b;
+            cursor: not-allowed;
+        }
+        .mod-card:hover .mod-link.disabled {
+            background: #101014;
+            box-shadow: none;
         }
     </style>
 </head>
@@ -145,34 +177,31 @@
         <p>Твой главный архив альтернативных временных линий, ремиксов и масштабных фанатских расширений Friday Night Funkin'. Исследуй лор, слушай треки и качай лучшие сборки.</p>
     </header>
 
-    <!-- Основной контент страницы -->
     <div class="container">
-        
-        <!-- Панель интерактивного поиска (для будущих модов) -->
-        <div style="margin: 20px 0; text-align: center;">
-            <input type="text" id="modSearch" onkeyup="searchMods()" placeholder="Введите название мода для поиска..." 
-                   style="width: 100%; max-width: 500px; padding: 15px 20px; background-color: #140d22; border: 2px solid #251a3a; border-radius: 8px; color: #fff; font-size: 1.1rem; font-family: 'Ubuntu Mono', monospace; outline: none; transition: border-color 0.3s;">
+        <!-- Строка поиска -->
+        <div class="search-container">
+            <input type="text" id="modSearch" onkeyup="searchMods()" placeholder="Введите название мода для поиска...">
         </div>
 
-        <!-- Контейнер для карточек (открываем сетку) -->
+        <!-- Сетка модов -->
         <div class="mods-grid">
+            
             <!-- ФЛАГМАНСКИЙ МОД: FRIDAY NIGHT DUSTIN -->
             <div class="mod-card" data-name="friday night dustin dusttale">
                 <div class="mod-info">
                     <h2>FNF: Friday Night Dustin (FULL)</h2>
-                    <p>Абсолютно новая, переработанная версия масштабного мода по вселенной Dusttale. Тебя ждет поехавший от бесконечных Геноцидов Санс, летающий призрак Папируса, хардкорные механики отравления кармой и увороты от Гастер-Бластеров. Полностью адаптирован под ру-комьюнити с качественным переводом диалогов и интерфейса!</p>
+                    <p>Абсолютно новая, переработанная версия масштабного мода по вселенной Dusttale. Тебя ждет поехавший от бесконечных Геноцидов Санс, летающий призрак Папируса, хардкорные механики отравления кармой и увороты от Гастер-Бластеров. Проект создается создателем ChezzarCat и режиссером Mar Mar на движке Codename Engine!</p>
                 </div>
-                <!-- Ссылка ведет в папку этого мода (создадим на следующем этапе) -->
-                <a href="mods/dustin/index.html" class="mod-link">Открыть архив мода</a>
+                <!-- Точная ссылка на ваш второй сайт dustin.html -->
+                <a href="dustin.html" class="mod-link"><i class="fas fa-ghost"></i> Открыть архив мода</a>
             </div>
-
             <!-- ЗАГЛУШКА 2: VS SONIC.EXE -->
             <div class="mod-card" data-name="vs sonic.exe">
                 <div class="mod-info">
                     <h2>FNF: Vs Sonic.exe (Creepypasta)</h2>
                     <p>Легендарный хоррор-мод, собравший в себе самые мрачные крипипасты про синего ежа. Безумный ритм, скрытые скримеры, уникальные механики статичных помех на экране и песни, которые проверяют тебя на прочность. Скоро здесь появится полный разбор лора и треков.</p>
                 </div>
-                <a href="#" class="mod-link" onclick="alert('Этот раздел находится в разработке!')">Скоро в архиве</a>
+                <a href="#" class="mod-link disabled" onclick="alert('Этот раздел находится в разработке!')">Скоро в архиве</a>
             </div>
 
             <!-- ЗАГЛУШКА 3: INDIE CROSS -->
@@ -181,56 +210,21 @@
                     <h2>FNF: Indie Cross (V1 Full)</h2>
                     <p>Грандиозный кроссовер с главными звездами инди-сцены: Чашкоголовым (Cuphead), Бенди (Bendy) и классическим Сансом из Undertale. Мод полностью меняет визуал под каждую вселенную и добавляет кастомные механики атак и уклонений. Раздел наполняется контентом.</p>
                 </div>
-                <a href="#" class="mod-link" onclick="alert('Этот раздел находится в разработке!')">Скоро в архиве</a>
+                <a href="#" class="mod-link disabled" onclick="alert('Этот раздел находится в разработке!')">Скоро в архиве</a>
             </div>
 
-        </div> <!-- Закрываем сетку mods-grid -->
-    </div> <!-- Закрываем контейнер container -->
-            <!-- ФЛАГМАНСКИЙ МОД: FRIDAY NIGHT DUSTIN -->
-            <div class="mod-card" data-name="friday night dustin dusttale">
-                <div class="mod-info">
-                    <h2>FNF: Friday Night Dustin (FULL)</h2>
-                    <p>Абсолютно новая, переработанная версия масштабного мода по вселенной Dusttale. Тебя ждет поехавший от бесконечных Геноцидов Санс, летающий призрак Папируса, хардкорные механики отравления кармой и увороты от Гастер-Бластеров. Полностью адаптирован под ру-комьюнити с качественным переводом диалогов и интерфейса!</p>
-                </div>
-                <!-- Ссылка ведет в папку этого мода (создадим на следующем этапе) -->
-                <a href="mods/dustin/index.html" class="mod-link">Открыть архив мода</a>
-            </div>
+        </div> <!-- Закрываем mods-grid -->
+    </div> <!-- Закрываем container -->
 
-            <!-- ЗАГЛУШКА 2: VS SONIC.EXE -->
-            <div class="mod-card" data-name="vs sonic.exe">
-                <div class="mod-info">
-                    <h2>FNF: Vs Sonic.exe (Creepypasta)</h2>
-                    <p>Легендарный хоррор-мод, собравший в себе самые мрачные крипипасты про синего ежа. Безумный ритм, скрытые скримеры, уникальные механики статичных помех на экране и песни, которые проверяют тебя на прочность. Скоро здесь появится полный разбор лора и треков.</p>
-                </div>
-                <a href="#" class="mod-link" onclick="alert('Этот раздел находится в разработке!')">Скоро в архиве</a>
-            </div>
-
-            <!-- ЗАГЛУШКА 3: INDIE CROSS -->
-            <div class="mod-card" data-name="indie cross bendy cuphead sans">
-                <div class="mod-info">
-                    <h2>FNF: Indie Cross (V1 Full)</h2>
-                    <p>Грандиозный кроссовер с главными звездами инди-сцены: Чашкоголовым (Cuphead), Бенди (Bendy) и классическим Сансом из Undertale. Мод полностью меняет визуал под каждую вселенную и добавляет кастомные механики атак и уклонений. Раздел наполняется контентом.</p>
-                </div>
-                <a href="#" class="mod-link" onclick="alert('Этот раздел находится в разработке!')">Скоро в архиве</a>
-            </div>
-
-        </div> <!-- Закрываем сетку mods-grid -->
-    </div> <!-- Закрываем контейнер container -->
-    <!-- Логика интерактивного поиска по архиву модов -->
+    <!-- Логика интерактивного поиска -->
     <script>
         function searchMods() {
-            // Получаем текст из поля поиска и переводим в нижний регистр
             let input = document.getElementById('modSearch').value.toLowerCase();
-            // Находим все карточки модов на странице
             let cards = document.getElementsByClassName('mod-card');
-
-            // Проходим циклом по каждой карточке
+            
             for (let i = 0; i < cards.length; i++) {
-                // Читаем поисковые теги из атрибута data-name
-                let modName = cards[i].getAttribute('data-name');
-                
-                // Если имя совпадает с вводом — показываем карточку, если нет — скрываем
-                if (modName.includes(input)) {
+                let name = cards[i].getAttribute('data-name');
+                if (name.includes(input)) {
                     cards[i].style.display = "flex";
                 } else {
                     cards[i].style.display = "none";
